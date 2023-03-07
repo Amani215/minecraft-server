@@ -1,0 +1,15 @@
+---
+- hosts: mc-servers
+  name: Deploy mc server
+  roles:
+    - geerlingguy.docker
+  become: true
+  vars:
+    docker_install_compose_plugin: false
+    docker_compose_package: docker-compose-plugin
+    docker_compose_package_state: present
+
+- hosts: mc-servers
+  name: Deploy mc server
+  roles:
+    - mc_server

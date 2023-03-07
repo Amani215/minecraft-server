@@ -1,0 +1,55 @@
+---
+- name: Get UID GID
+  ansible.builtin.getent:
+    database: passwd
+
+- name: Set UID GID
+  ansible.builtin.set_fact:
+    UID: "{{ getent_passwd[ansible_user].1 }}"
+    GID: "{{ getent_passwd[ansible_user].2 }}"
+
+- name: Ensure Directory Exists
+  ansible.builtin.file:
+    path: "{{ mc_server_folder }}"
+    state: directory
+    group: "{{ ansible_user }}"
+    owner: "{{ ansible_user }}"
+    mode: u=rwx,g=rwx,o=rx
+
+- name: Download Jar file
+  ansible.builtin.get_url:
+    checksum: sha256:109d7e838402c045a5b571123ea7791dcfb99d1cb858ab97b1edf09b83ee49fa
+    url: "{{ PAPER_URL }}"
+    dest: "{{ mc_server_folder }}/server.jar"
+    group: "{{ ansible_user }}"
+    owner: "{{ ansible_user }}"
+    mode: u=rwx,g=rwx,o=rx
+
+- name: Create eula.txt
+  ansible.builtin.copy:
+    content: |
+      eula=true
+    dest: "{{ mc_server_folder }}/eula.txt"
+    group: "{{ ansible_user }}"
+    owner: "{{ ansible_user }}"
+    mode: u=rw,g=rw,o=r
+
+- name: Create run.sh
+  ansible.builtin.copy:
+    content: |
+      #! /bin/sh
+
+      java -jar ${XMX} ./server.jar
+    dest: "{{ mc_server_folder }}/run.sh"
+    group: "{{ ansible_user }}"
+    owner: "{{ ansible_user }}"
+    mode: u=rwx,g=rwx,o=rx
+
+- name: Create Config files
+  ansible.builtin.template:
+    src: "{{ item }}"
+    dest: "{{ mc_server_folder }}/{{ item  | basename }}"
+    group: "{{ ansible_user }}"
+    owner: "{{ ansible_user }}"
+    mode: u=rw,g=rw,o=r
+  with_fileglob: ../templates/*

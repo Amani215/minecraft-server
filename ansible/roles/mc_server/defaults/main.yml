@@ -1,0 +1,3 @@
+---
+mc_server_folder: /home/{{ ansible_user }}/mc
+mc_server_seed: "-5979158509470055858"

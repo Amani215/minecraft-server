@@ -1,0 +1,16 @@
+---
+version: '3.8'
+
+services:
+  server:
+    image: amazoncorretto:{{ JDK_VERSION }}
+    container_name: minecraft_server
+    volumes:
+      - .:/minecraft
+    working_dir: /minecraft
+    environment:
+      - XMX=-Xmx2048M
+    ports:
+      - 25565:25565
+    user: "{{ GID }}:{{ UID }}"
+    entrypoint: tail -f /dev/null
