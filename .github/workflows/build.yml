@@ -27,7 +27,7 @@ jobs:
         id: mc-meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ github.repository }}-mc
+          images: ${{ env.REGISTRY }}/${{ github.repository }}
 
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v3
@@ -35,7 +35,6 @@ jobs:
           context: docker
           push: true
           tags: |
-            ${{ steps.mc-meta.outputs.tags }}-alpine,
-            ${{ steps.mc-meta.outputs.tags }}-alpine3.15
+            ${{ steps.mc-meta.outputs.tags }}-1.19.3-445
           labels: ${{ steps.mc-meta.outputs.labels }}
           file: docker/Dockerfile
