@@ -1,0 +1,5 @@
+{
+  "ansible.python.interpreterPath": "./.venv/bin/python3",
+  "ansible.python.activationScript": "./.venv/bin/activate",
+  "python.defaultInterpreterPath": "./.venv/bin/python3"
+}
